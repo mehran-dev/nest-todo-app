@@ -1,5 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { TodosService } from './todos.service';
+import { User, UserInfo } from 'src/decorator/user.decorator';
+import { Roles } from 'src/decorator/roles.decorator';
 
 type Todo = {
   title: any;
@@ -17,13 +19,17 @@ export class TodosController {
   constructor(private todosService: TodosService) {}
 
   @Get()
-  async getTodos() {
+  @Roles('admin', 'user')
+  async getTodos(@User() user: UserInfo) {
     const todos = await this.todosService.getTodos();
+    console.log('user in getTodos controller', user);
+
     if (!todos) {
       return [];
     }
     return todos;
   }
+
   @Post()
   async addTodo(@Body() body: Todo) {
     console.log(body);
