@@ -4,11 +4,14 @@ import * as jwt from 'jsonwebtoken';
 import { User } from '../schema/user.model';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+// import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
+    // private readonly jwtService: JwtService,
+
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
@@ -24,7 +27,8 @@ export class RolesGuard implements CanActivate {
     const token = request.headers?.authorization?.split('Bearer ')[1];
 
     try {
-      const payload = (await jwt.verify(token , "secret")) as any;
+      const payload = (await jwt.verify(token, 'secret')) as any;
+      // const payload = await this.jwtService.verify(token);
 
       const user = await this.userModel.findOne({
         _id: payload.id,
