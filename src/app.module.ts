@@ -8,17 +8,24 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { UserInterceptor } from './interceptor/user.interceptor';
 import { RolesGuard } from './guards/guard';
+import { User } from './decorator/user.decorator';
+import { UserSchema } from './schema/user.model';
 
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb://localhost:27017/todo-list'),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]), // Register User schema
+
     UsersModule,
     TodosModule,
     AuthModule,
   ],
   controllers: [AppController],
+  exports: [MongooseModule], // export MongooseModule
+
   providers: [
     AppService,
+
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
