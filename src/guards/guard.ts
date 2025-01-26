@@ -1,7 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import * as jwt from 'jsonwebtoken';
-import { User, UserDocument } from '../schema/user.model';
+import { User } from '../schema/user.model';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -9,7 +9,7 @@ import { Model } from 'mongoose';
 export class RolesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
-    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -24,7 +24,7 @@ export class RolesGuard implements CanActivate {
     const token = request.headers?.authorization?.split('Bearer ')[1];
 
     try {
-      const payload = (await jwt.verify(token)) as any;
+      const payload = (await jwt.verify(token , "secret")) as any;
 
       const user = await this.userModel.findOne({
         _id: payload.id,

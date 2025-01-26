@@ -19,7 +19,7 @@ export class UserInterceptor implements NestInterceptor {
     if (!token) {
       console.log('no token provided !');
     }
-    const user = await jwt.decode(token);
+    const user = await jwt.decode(token, 'secret');
 
     console.log('user in interceptor ', user);
 

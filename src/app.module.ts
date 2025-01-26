@@ -8,8 +8,8 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { UserInterceptor } from './interceptor/user.interceptor';
 import { RolesGuard } from './guards/guard';
-import { User } from './decorator/user.decorator';
-import { UserSchema } from './schema/user.model';
+
+import { UserSchema, User } from './schema/user.model';
 
 @Module({
   imports: [
