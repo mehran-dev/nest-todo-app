@@ -5,12 +5,11 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
-import { throwError } from 'rxjs';
 
 @Injectable()
 export class UserInterceptor implements NestInterceptor {
   constructor() {
-   // console.log('UserInterceptor Initialized');
+    // console.log('UserInterceptor Initialized');
   }
   async intercept(context: ExecutionContext, handler: CallHandler) {
     const request = context.switchToHttp().getRequest();

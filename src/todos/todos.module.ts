@@ -12,10 +12,11 @@ import { UserInterceptor } from 'src/interceptor/user.interceptor';
   ],
   providers: [
     TodosService,
-    // {
-    //   provide: APP_INTERCEPTOR,
-    //   useClass: UserInterceptor,
-    // },
+
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: UserInterceptor,
+    },
   ],
   controllers: [TodosController],
 })

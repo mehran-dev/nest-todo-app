@@ -1,7 +1,18 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { TodosService } from './todos.service';
 import { User, UserInfo } from 'src/decorator/user.decorator';
 import { Roles } from 'src/decorator/roles.decorator';
+import { JwtStrategy } from 'src/auth/jwt.strategy';
+import { UserInterceptor } from 'src/interceptor/user.interceptor';
 
 type Todo = {
   title: any;
@@ -14,6 +25,7 @@ type Todo = {
   user: any;
 };
 
+// @UseGuards(JwtStrategy)
 @Controller('todos')
 export class TodosController {
   constructor(private todosService: TodosService) {}
@@ -35,6 +47,24 @@ export class TodosController {
     console.log(body);
 
     const newTodo = await this.todosService.addTodo(body);
+
+    return newTodo;
+  }
+  // @UseInterceptors(UserInterceptor)
+  @Roles('user', 'admin')
+  @Patch(':id')
+  async updateTodo(
+    @Param('id') id: string,
+    @Body() body: Partial<Todo>,
+    @User() user: UserInfo,
+  ) {
+    console.log('QWERTYUIOP', user);
+
+    const newTodo = await this.todosService.updateTodo(
+      id,
+      body,
+      user.id.toString(),
+    );
 
     return newTodo;
   }

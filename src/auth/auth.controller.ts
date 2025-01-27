@@ -5,12 +5,15 @@ import {
   Req,
   UnauthorizedException,
   BadRequestException,
+  Get,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { User } from 'src/schema/user.model';
+
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import { User as UserD, UserInfo } from 'src/decorator/user.decorator';
+import { User } from 'src/schema/user.model';
 
 @Controller('auth')
 export class AuthController {
@@ -32,6 +35,10 @@ export class AuthController {
     return this.authService.login(user);
   }
 
+  @Get('/me')
+  async getMe(@UserD() user: UserInfo) {
+    return user;
+  }
   @Post('/register')
   async register(
     @Body() body: { username: string; password: string; role: string },
