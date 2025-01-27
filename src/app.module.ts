@@ -7,7 +7,7 @@ import { TodosModule } from './todos/todos.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { UserInterceptor } from './interceptor/user.interceptor';
-import { RolesGuard } from './guards/guard';
+import { RolesGuard } from './guards/auth.guard';
 
 import { UserSchema, User } from './schema/user.model';
 

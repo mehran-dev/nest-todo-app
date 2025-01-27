@@ -1,18 +1,7 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Patch,
-  Post,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { TodosService } from './todos.service';
 import { User, UserInfo } from 'src/decorator/user.decorator';
 import { Roles } from 'src/decorator/roles.decorator';
-import { JwtStrategy } from 'src/auth/jwt.strategy';
-import { UserInterceptor } from 'src/interceptor/user.interceptor';
 
 type Todo = {
   title: any;

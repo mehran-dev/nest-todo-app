@@ -17,7 +17,6 @@ import { User } from 'src/schema/user.model';
 
 @Controller('auth')
 export class AuthController {
-  //   constructor() {}
   constructor(
     private authService: AuthService,
     @InjectModel(User.name) private readonly userModel: Model<User>,
