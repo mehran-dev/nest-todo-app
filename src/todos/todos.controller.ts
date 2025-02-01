@@ -12,6 +12,13 @@ import { User, UserInfo } from 'src/decorator/user.decorator';
 import { Roles } from 'src/decorator/roles.decorator';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 type Todo = {
   title: any;
@@ -24,14 +31,16 @@ type Todo = {
   user: any;
 };
 
-// @UseGuards(JwtStrategy)
+@ApiTags('todos')
 @Controller('todos')
 export class TodosController {
   constructor(
     private todosService: TodosService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
-
+  @ApiBearerAuth() // Show Auth button in Swagger
+  @ApiOperation({ summary: 'Get all todos' })
+  @ApiResponse({ status: 200, description: 'Returns all todos' })
   @Get()
   @Roles('admin', 'user')
   async getTodos(@User() user: UserInfo) {
@@ -42,14 +51,18 @@ export class TodosController {
     }
     return todos;
   }
-
+  @ApiOperation({ summary: 'Adds one todo' })
+  @ApiResponse({ status: 200, description: 'Adds todo ' })
   @Post()
   async addTodo(@Body() body: Todo) {
     const newTodo = await this.todosService.addTodo(body);
 
     return newTodo;
   }
-  // @UseInterceptors(UserInterceptor)
+
+  @ApiOperation({ summary: 'update todo' })
+  @ApiResponse({ status: 200, description: 'Upserts todo by Id ' })
+  //@ApiBody({ type: typeof<Todo>   })
   @Roles('user', 'admin')
   @Patch(':id')
   async updateTodo(

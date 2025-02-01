@@ -14,6 +14,8 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { User as UserD, UserInfo } from 'src/decorator/user.decorator';
 import { User } from 'src/schema/user.model';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { LoginDTO } from './dto/auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -22,6 +24,11 @@ export class AuthController {
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
+  @ApiOperation({ summary: 'login' })
+  @ApiResponse({ status: 200, description: 'ok , login ' })
+  @ApiBody({
+    type: LoginDTO,
+  })
   @Post('/login')
   async login(@Body() body: { username: string; password: string }) {
     const user = await this.authService.validateUser(
