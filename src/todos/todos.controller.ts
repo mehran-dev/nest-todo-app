@@ -1,7 +1,17 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { TodosService } from './todos.service';
 import { User, UserInfo } from 'src/decorator/user.decorator';
 import { Roles } from 'src/decorator/roles.decorator';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 
 type Todo = {
   title: any;
@@ -17,14 +27,16 @@ type Todo = {
 // @UseGuards(JwtStrategy)
 @Controller('todos')
 export class TodosController {
-  constructor(private todosService: TodosService) {}
+  constructor(
+    private todosService: TodosService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+  ) {}
 
   @Get()
   @Roles('admin', 'user')
   async getTodos(@User() user: UserInfo) {
     const todos = await this.todosService.getTodos();
-    console.log('user in getTodos controller', user);
-
+    this.logger.log('info', user);
     if (!todos) {
       return [];
     }
@@ -33,8 +45,6 @@ export class TodosController {
 
   @Post()
   async addTodo(@Body() body: Todo) {
-    console.log(body);
-
     const newTodo = await this.todosService.addTodo(body);
 
     return newTodo;
@@ -47,8 +57,6 @@ export class TodosController {
     @Body() body: Partial<Todo>,
     @User() user: UserInfo,
   ) {
-    console.log('QWERTYUIOP', user);
-
     const newTodo = await this.todosService.updateTodo(
       id,
       body,

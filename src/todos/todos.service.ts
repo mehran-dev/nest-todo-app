@@ -18,20 +18,14 @@ export class TodosService {
     return await this.todoModel.create({ ...todo });
   };
   updateTodo = async (id, body, userId: string) => {
-    console.log(id);
-    console.log(body);
-    console.log(userId);
-
     try {
       const todo = await this.todoModel.findOne({ _id: id });
-      console.log(todo);
 
       if (!todo) {
         throw new Error('Todo not found');
       }
       // Check if the logged-in user owns the todo
       if (todo.user.toString() !== userId.toString()) {
-        console.log(todo.user, userId);
         throw new Error(
           "Unauthorized: You do not have permission to update this todo \n you don't have permission ",
         );
